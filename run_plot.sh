@@ -22,64 +22,46 @@ maxiter=400000
 # rhoarray=(0.800 0.850 0.900 0.950 1.00001 1.050 1.100 1.150 1.200 1.250 1.300)
 # rhoarray=(0.800 0.850 0.900)
 # rhoarray=(0.900 0.950 1.00001 1.050 1.100 1.150 1.200 1.250 1.300)
-rhoarray=(1.350 1.400 1.450 1.500)
+rhoarray=(0.800 0.850 0.900 0.950 1.00001 1.050 1.100 1.150 1.200 1.250 1.300 1.350 1.400 1.450 1.500)
+ellarray=(-5.0 -4.0 -3.0 -2.0 -1.0 0.00001 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0)
 
 for epsilon in ${epsilonarray[@]}; do
     for fraction in "${fractionarray[@]}"; do
         for rho in "${rhoarray[@]}"; do
-            count=0
-            # declare -n hXarr="$hXarri"
+            for ell in "${ellarray[@]}"; do
+                count=0
 
-            # action_name="OneCapital_${hXarr[0]}_${hXarr[1]}_${hXarr[2]}_LR_${epsilon}"
-            # action_name="OneCapital_try_original"
+                action_name="OneCapital_newcab_newgrid_morepts_opt"
 
-            # dataname="OneCapital_try_original_eps_${epsilon}_frac_${fraction}"
-            # for delta in ${deltaarr[@]}; do
-            #     for cearth in ${ceartharray[@]}; do
-            #         for tauc in ${taucarray[@]}; do
-            # action_name="OneCapital_try_new"
+                dataname="${action_name}_${epsilon}_frac_${fraction}"
+                
+                mkdir -p ./job-outs/${action_name}/p_eps_${epsilon}_frac_${fraction}/
 
-            # dataname="OneCapital_try_new_eps_${epsilon}_frac_${fraction}"
+                if [ -f ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh ]; then
+                    rm ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh
+                fi
 
-            # action_name="OneCapital_newcab"
+                mkdir -p ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/
 
-            # dataname="OneCapital_newcab_${epsilon}_frac_${fraction}"
+                touch ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh
 
-            # action_name="OneCapital_newcab_newgrid"
-            action_name="OneCapital_newcab_newgrid_morepts"
-
-            # action_name="OneCapital_newcab3_addD"
-
-            dataname="${action_name}_${epsilon}_frac_${fraction}"
-
-
-            mkdir -p ./job-outs/${action_name}/p_eps_${epsilon}_frac_${fraction}/
-
-            if [ -f ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}.sh ]; then
-                rm ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}.sh
-            fi
-
-            mkdir -p ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/
-
-            touch ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}.sh
-
-            tee -a ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}.sh <<EOF
+                tee -a ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh <<EOF
 #! /bin/bash
 
 ######## login
-#SBATCH --job-name=${rho}
-#SBATCH --output=./job-outs/${action_name}/p_eps_${epsilon}_frac_${fraction}/rho_${rho}.out
-#SBATCH --error=./job-outs/${action_name}/p_eps_${epsilon}_frac_${fraction}/rho_${rho}.err
+#SBATCH --job-name=${rho}_${ell}
+#SBATCH --output=./job-outs/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.out
+#SBATCH --error=./job-outs/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.err
 
 #SBATCH --account=pi-lhansen
-#SBATCH --partition=standard
-#SBATCH --cpus-per-task=3
+#SBATCH --partition=caslake
+#SBATCH --cpus-per-task=1
 #SBATCH --mem=1G
-#SBATCH --time=7-00:00:00
+#SBATCH --time=12:00:00
 
 ####### load modules
-# module load python/booth/3.8/3.8.5  gcc/9.2.0
-module load python/booth/3.8 gcc/9.2.0
+module load python  gcc
+
 
 echo "\$SLURM_JOB_NAME"
 
@@ -87,7 +69,7 @@ echo "Program starts \$(date)"
 start_time=\$(date +%s)
 # perform a task
 
-python3 -u /home/bcheng4/Twist_Bin/$python_name  --rho ${rho} --epsilon ${epsilon}  --fraction ${fraction}   --maxiter ${maxiter}  --dataname ${dataname} --figname ${dataname}
+python3 -u /project/lhansen/Twist_Bin/$python_name  --rho ${rho} --ell ${ell} --epsilon ${epsilon}  --fraction ${fraction}   --maxiter ${maxiter}  --dataname ${dataname} --figname ${dataname}
 echo "Program ends \$(date)"
 end_time=\$(date +%s)
 
@@ -97,10 +79,10 @@ elapsed=\$((end_time - start_time))
 eval "echo Elapsed time: \$(date -ud "@\$elapsed" +'\$((%s/3600/24)) days %H hr %M min %S sec')"
 
 EOF
-            count=$(($count + 1))
-            sbatch ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}.sh
+                count=$(($count + 1))
+                sbatch ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh
             #                 done
-            #             done
+            done
         done
     done
 done

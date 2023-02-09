@@ -29,6 +29,7 @@ reporterror = True
 
 parser = argparse.ArgumentParser(description="xi_r values")
 parser.add_argument("--rho", type=float)
+parser.add_argument("--ell", type=float)
 parser.add_argument("--epsilon", type=float)
 parser.add_argument("--fraction", type=float)
 parser.add_argument("--maxiter", type=float)
@@ -80,8 +81,7 @@ epsilon = args.epsilon
 
 Data_Dir = "./data/"+args.dataname+"/"
 
-model_simul_dir_post = Data_Dir + "result_rho_{}_eps_{}_frac_{}".format(rho,epsilon,fraction)
-
+model_simul_dir_post = Data_Dir + "result_ell_{}_rho_{}_eps_{}_frac_{}".format(ell,rho,epsilon,fraction)
 
 res = pickle.load(open(model_simul_dir_post, "rb"))
 
@@ -91,7 +91,6 @@ h1_star = res["h1_star"]
 hz_star = res["hz_star"]
 
 V0 = res["V0"]
-
 
 Fig_Dir = "./figure/"+args.figname+"/"
 
