@@ -311,7 +311,7 @@ res = {
 Data_Dir = "./data/"+args.dataname+"/"
 os.makedirs(Data_Dir, exist_ok=True)
 
-with open(Data_Dir + "result_rho_{}_eps_{}_frac_{}".format(rho,epsilon,fraction), "wb") as f:
+with open(Data_Dir + "result_ell_{}_rho_{}_eps_{}_frac_{}".format(ell, rho,epsilon,fraction), "wb") as f:
     pickle.dump(res, f)
 
 # Data_Dir = "./continuous2/"
