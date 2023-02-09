@@ -70,7 +70,7 @@ echo "Program starts \$(date)"
 start_time=\$(date +%s)
 # perform a task
 
-python3 -u /home/hqin/Twist_Bin/$python_name  --rho ${rho} --ell ${ell} --epsilon ${epsilon}  --fraction ${fraction}   --maxiter ${maxiter} --dataname ${dataname} --figname ${dataname}
+python3 -u /project/lhansen/Twist_Bin/$python_name  --rho ${rho} --ell ${ell} --epsilon ${epsilon}  --fraction ${fraction}   --maxiter ${maxiter} --dataname ${dataname} --figname ${dataname}
 echo "Program ends \$(date)"
 end_time=\$(date +%s)
 
