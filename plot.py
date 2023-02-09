@@ -60,7 +60,7 @@ A_cap = 0.05
 phi = 28.0
 
 # ell=0.05
-ell = 3.82
+ell = args.ell
 
 JJ=201
 # rmax =  18.0
@@ -110,7 +110,7 @@ plt.title('Investment-Capital Ratio')
 plt.xlim([-0.05, 0.05])
 plt.ylim([0.015,0.040])
 
-plt.savefig(Fig_Dir+"d_rho_{}.png".format(rho))
+plt.savefig(Fig_Dir+"d_rho_{}_ell_{}.png".format(rho,ell))
 plt.close()
 
 
@@ -124,10 +124,11 @@ plt.xlabel('z')
 plt.title('Distortion')  
 plt.xlim([-0.05, 0.05])
 plt.ylim([-0.0050, -0.0020])
-plt.savefig(Fig_Dir+"h_rho_{}.png".format(rho))
+plt.savefig(Fig_Dir+"h_rho_{}_ell_{}.png".format(rho,ell))
 plt.close()
 
 print("d0={}".format(d_star[int(len(W1)/2),2,2]))
+print("V0={}".format(V0[:,2,2][int(len(W1)/2),2,2]))
 
 plt.plot(W1,V0[:,2,2],label="V")
 plt.legend()
@@ -135,5 +136,5 @@ plt.xlabel('z')
 # plt.ylabel('$\%$ of GDP')
 plt.title('Value Function')  
 plt.xlim([-0.05, 0.05])
-plt.savefig(Fig_Dir+"VF_rho_{}.png".format(rho))
+plt.savefig(Fig_Dir+"VF_rho_{}_ell_{}.png".format(rho,ell))
 plt.close()
