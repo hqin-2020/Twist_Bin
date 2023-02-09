@@ -121,8 +121,6 @@ d_star = 0.025*np.ones(W1_mat.shape)
 h1_star = -0.025*np.zeros(W1_mat.shape)
 hz_star = -0.025*np.zeros(W1_mat.shape)
 
-
-
 dVec = np.array([hW1, hW2, hW3])
 increVec = np.array([1, nW1, nW1*nW2], dtype=np.int32)
 # increVec = np.array([1, nW1_short, nW1_short*nW2], dtype=np.int32)
@@ -151,8 +149,6 @@ epsilon = args.epsilon
 while FC_Err > tol and epoch < max_iter:
     start_eps = time.time()
 
-
-
     dVdW1= finiteDiff_3D(V0, 0, 1, hW1)
     ddVddW1= finiteDiff_3D(V0, 0, 2, hW1)
     # dZ = dW1
@@ -177,35 +173,9 @@ while FC_Err > tol and epoch < max_iter:
     
     d_new = mc - 1
     d_new = d_new/theta2
-
-    # d_new[d_new>=A_cap] = A_cap-0.001
-
-    #######new scheme for d#############
-    # V0[V0<=1e-16] = 1e-16 
-    # RHS = delta*V0**(rho-1)/(A_cap-d_star)**(rho)
-    
-    # if RHS.all()>0:
-    #     RHS_inv = 1/RHS
-        
-    #     d_new = RHS_inv-1
-    #     d_new = d_new/theta2
-        
-    #     d_new[d_new>=A_cap] = A_cap-0.001
-
-
-    # else:
-    #     d_new[RHS<=0]=A_cap-0.001
-        
-    #     d_new[RHS>0] = (1/RHS-1)/theta2
-        
-    #     d_new[d_new>=A_cap] = A_cap-0.001
-
-        
-    
     
     h1_new = -(.01*sigma_c[0]+dVdW1*sigma_z[0])/ell
     hz_new = -(.01*sigma_c[1]+dVdW1*sigma_z[1])/ell
-    # c_new[c_new<=1e-16] = 1e-16
 
     d = d_new * fraction + d_star*(1-fraction)
     h1 = h1_new * fraction + h1_star*(1-fraction)

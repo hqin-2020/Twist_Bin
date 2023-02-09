@@ -128,7 +128,7 @@ plt.savefig(Fig_Dir+"h_rho_{}_ell_{}.png".format(rho,ell))
 plt.close()
 
 print("d0={}".format(d_star[int(len(W1)/2),2,2]))
-print("V0={}".format(V0[:,2,2][int(len(W1)/2),2,2]))
+print("V0={}".format(V0[int(len(W1)/2),2,2]))
 
 plt.plot(W1,V0[:,2,2],label="V")
 plt.legend()
