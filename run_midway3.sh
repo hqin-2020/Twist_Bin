@@ -2,26 +2,28 @@
 
 # epsilonarray=(0.1 0.05 0.01 0.005) #Computation of coarse grid and psi10.5
 # fractionarray=(0.1 0.05 0.01 0.005)
-# epsilonarray=(0.1) #Computation of coarse grid and psi10.5
-# fractionarray=(0.1)
+epsilonarray=(0.1) #Computation of coarse grid and psi10.5
+fractionarray=(0.1)
 
-epsilonarray=(0.5) #Computation of coarse grid and psi10.5
-fractionarray=(0.5)
+# epsilonarray=(0.01) #Computation of coarse grid and psi10.5
+# fractionarray=(0.01)
 
 # epsilonarray=(0.2 0.01) #Computation of coarse grid and psi10.5
 # fractionarray=(0.2 0.01)
 
 actiontime=1
 
-python_name="singlecap_ex_newcab_newsigmaz.py"
+# python_name="singlecap_ex.py"
+# python_name="singlecap_ex_newcab.py"
+# python_name="singlecap_ex_newcab_newsigmaz.py"
+python_name="singlecap_ex_newcab_newsigmaz_XDiff.py"
 
-maxiter=20000
+maxiter=3000000
 
 # rhoarray=(0.667 0.750 1.00001 1.333 1.500)
 # rhoarray=(0.800 0.850 0.900 0.950 1.00001 1.050 1.100 1.150 1.200 1.250 1.300)
-# rhoarray=(0.800 0.850 0.900)
-# rhoarray=(0.950 1.00001 1.050 1.100 1.150 1.200 1.250 1.300)
-rhoarray=(1.00001 1.15 1.3)
+rhoarray=(0.650 0.700 0.750 0.800 0.850 0.900 0.950 1.00001 1.050 1.100 1.150 1.200 1.250 1.300 1.350 1.400 1.450 1.500)
+# rhoarray=(1.350 1.400 1.450 1.500)
 
 for epsilon in ${epsilonarray[@]}; do
     for fraction in "${fractionarray[@]}"; do
@@ -30,9 +32,19 @@ for epsilon in ${epsilonarray[@]}; do
             # declare -n hXarr="$hXarri"
 
             # action_name="OneCapital_${hXarr[0]}_${hXarr[1]}_${hXarr[2]}_LR_${epsilon}"
-            action_name="OneCapital_try_original"
+            # action_name="OneCapital_try_new"
 
-            dataname="OneCapital_try_original_eps_${epsilon}_frac_${fraction}"
+            # dataname="OneCapital_try_new_eps_${epsilon}_frac_${fraction}"
+
+            # action_name="OneCapital_newcab"
+            # action_name="OneCapital_newcab_rep"
+            # action_name="OneCapital_newcab_newsigmaz"
+            # action_name="OneCapital_newcab_newsigmaz_newgrid"
+            action_name="OneCapital2"
+        
+            # action_name="OneCapital_newcab3_addD"
+
+            dataname="${action_name}_${epsilon}_frac_${fraction}"
 
             # for delta in ${deltaarr[@]}; do
             #     for cearth in ${ceartharray[@]}; do
@@ -52,15 +64,15 @@ for epsilon in ${epsilonarray[@]}; do
 #! /bin/bash
 
 ######## login
-#SBATCH --job-name=${rho}
-#SBATCH --output=./job-outs/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}.out
-#SBATCH --error=./job-outs/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}.err
+#SBATCH --job-name=${rho}_${ell}
+#SBATCH --output=./job-outs/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.out
+#SBATCH --error=./job-outs/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.err
 
 #SBATCH --account=pi-lhansen
 #SBATCH --partition=caslake
-#SBATCH --cpus-per-task=3
+#SBATCH --cpus-per-task=1
 #SBATCH --mem=1G
-#SBATCH --time=03:00:00
+#SBATCH --time=12:00:00
 
 ####### load modules
 module load python  gcc
@@ -71,7 +83,7 @@ echo "Program starts \$(date)"
 start_time=\$(date +%s)
 # perform a task
 
-python3 -u /home/hqin/Twist_Bin/$python_name  --rho ${rho} --epsilon ${epsilon}  --fraction ${fraction}   --maxiter ${maxiter} --dataname ${dataname} --figname ${dataname}
+python3 -u /project/lhansen/Twist_Bin/$python_name  --rho ${rho} --ell ${ell} --epsilon ${epsilon}  --fraction ${fraction}   --maxiter ${maxiter} --dataname ${dataname} --figname ${dataname}
 echo "Program ends \$(date)"
 end_time=\$(date +%s)
 
