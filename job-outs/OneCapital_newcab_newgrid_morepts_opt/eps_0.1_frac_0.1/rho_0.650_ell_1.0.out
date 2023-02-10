@@ -1,0 +1,17 @@
+0.650_1.0
+Program starts Fri Feb 10 13:32:53 CST 2023
+Grid dimension: [101, 11, 11]
+
+Grid step: [0.001, 0.1, 0.1]
+
+V0_max,min=0.0,0.0
+D_max,min=nan,nan
+d_max,min=0.02898372024682711,0.02898372024682711
+h1_max,min=-0.0001706669999999506,-0.00017066700000002979
+hz_max,min=-0.00020249999999988777,-0.00020250000000006764
+petsc total: 0.003s
+PETSc preconditioned residual norm is nan iterations: 0
+Epoch 2 (PETSc): PDE Error: nan False Transient Error: 0.0000000000
+Epoch time: 0.0101
+Program ends Fri Feb 10 13:32:53 CST 2023
+Elapsed time: 0 days 00 hr 00 min 00 sec

@@ -1,0 +1,2 @@
+/project/lhansen/Twist_Bin/singlecap_ex_newcab_newsigmaz.py:180: RuntimeWarning: invalid value encountered in log
+  temp = (1-rho)* ( np.log(A_cap - d)-V0 )
