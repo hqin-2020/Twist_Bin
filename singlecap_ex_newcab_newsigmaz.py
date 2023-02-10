@@ -45,10 +45,7 @@ sigma_c = 0.01*np.array([0.477, 0.0 ])   # consumption exposure (= exposure of s
 sigma_z = 0.01*np.array([0.011, 0.025])
 rho = args.rho
 
-
-# delta = 0.002 # 0.0025
 delta = 0.0025 # 0.0025
-# A_cap = 0.05 # 0.0288
 A_cap = 0.0288 # 0.0288
 
 phi = 28.0
