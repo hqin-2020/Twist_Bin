@@ -3,8 +3,8 @@
 # import matplotlib as mpl
 import pickle
 import time
-import petsclinearsystem
-# import petsclinearsystemXDiff
+# import petsclinearsystem
+import petsclinearsystemXDiff
 from petsc4py import PETSc
 import petsc4py
 import os
@@ -71,13 +71,6 @@ JJ=201
 zmax = 0.05
 zmin = -zmax
 
-
-
-
-
-
-
-
 W1_min = zmin
 W1_max = zmax
 hW1 = 0.001
@@ -109,8 +102,6 @@ W3_mat_1d = W3_mat.ravel(order='F')
 
 lowerLims = np.array([W1.min(), W2.min(), W3.min()], dtype=np.float64)
 upperLims = np.array([W1.max(), W2.max(), W3.max()], dtype=np.float64)
-
-
 
 print("Grid dimension: [{}, {}, {}]\n".format(nW1, nW2, nW3))
 print("Grid step: [{}, {}, {}]\n".format(hW1, hW2, hW3))
@@ -250,16 +241,16 @@ while FC_Err > tol and epoch < max_iter:
     #                                    B_3_1d, C_1_1d, C_2_1d, C_3_1d, C_12_1d, C_23_1d, C_31_1d, epsilon, lowerLims, upperLims, dVec, increVec, petsc_mat)
     # V0_1d = V0.ravel(order='F')
     # b = V0_1d / epsilon + D_1d 
-    # petsclinearsystemXDiff.formLinearSystem(W1_mat_1d, W2_mat_1d, W3_mat_1d, A_1d, B_1_1d, B_2_1d,
-    #                                    B_3_1d, C_1_1d, C_2_1d, C_3_1d, epsilon, lowerLims, upperLims, dVec, increVec, petsc_mat)
-    # V0_1d = V0.ravel(order='F')
-    # b = V0_1d  + D_1d *epsilon
-
-
-    petsclinearsystem.formLinearSystem(W1_mat_1d, W2_mat_1d, W3_mat_1d, A_1d, B_1_1d, B_2_1d,
+    petsclinearsystemXDiff.formLinearSystem(W1_mat_1d, W2_mat_1d, W3_mat_1d, A_1d, B_1_1d, B_2_1d,
                                        B_3_1d, C_1_1d, C_2_1d, C_3_1d, epsilon, lowerLims, upperLims, dVec, increVec, petsc_mat)
     V0_1d = V0.ravel(order='F')
     b = V0_1d  + D_1d *epsilon
+
+
+    # petsclinearsystem.formLinearSystem(W1_mat_1d, W2_mat_1d, W3_mat_1d, A_1d, B_1_1d, B_2_1d,
+    #                                    B_3_1d, C_1_1d, C_2_1d, C_3_1d, epsilon, lowerLims, upperLims, dVec, increVec, petsc_mat)
+    # V0_1d = V0.ravel(order='F')
+    # b = V0_1d  + D_1d *epsilon
 
 
     petsc_rhs = PETSc.Vec().createWithArray(b)

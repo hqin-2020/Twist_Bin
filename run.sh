@@ -36,7 +36,7 @@ for epsilon in ${epsilonarray[@]}; do
             for ell in "${ellarray[@]}"; do
                 count=0
 
-                action_name="OneCapital_newcab_newgrid_morepts_opt2"
+                action_name="OneCapital_newcab_newgrid_morepts_opt3"
 
                 dataname="${action_name}_${epsilon}_frac_${fraction}"
 
