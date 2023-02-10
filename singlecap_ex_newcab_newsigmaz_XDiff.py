@@ -3,7 +3,8 @@
 # import matplotlib as mpl
 import pickle
 import time
-import petsclinearsystem
+# import petsclinearsystem
+import petsclinearsystemXDiff
 from petsc4py import PETSc
 import petsc4py
 import os
@@ -37,15 +38,22 @@ args = parser.parse_args()
 alpha_z_hat = 0.0
 kappa_hat = 0.014
 
-alpha_k_hat = -0.0088       # -1.279  
+alpha_k_hat = -0.0088       # -1.279
+# alpha_c_hat = 0.484      
 
 beta_hat = 1.0
-sigma_c = 0.01*np.array([0.477, 0.0 ])   # consumption exposure (= exposure of single capital)
+sigma_c = 0.01* np.array([0.477, 0.0 ])   # consumption exposure (= exposure of single capital)
 
-sigma_z = 0.01*np.array([0.011, 0.025])
+sigma_z = 0.01* np.array([0.011, 0.025])
+# sigma_z = 0.01*np.array([0.011, 0.025])
 rho = args.rho
 
+# delta = 0.002
+# A_cap = 0.05
+
+# delta = 0.002 # 0.0025
 delta = 0.0025 # 0.0025
+# A_cap = 0.05 # 0.0288
 A_cap = 0.0288 # 0.0288
 
 phi = 28.0
@@ -62,6 +70,12 @@ JJ=201
 # zmax = 1.0
 zmax = 0.05
 zmin = -zmax
+
+
+
+
+
+
 
 
 W1_min = zmin
@@ -98,7 +112,6 @@ upperLims = np.array([W1.max(), W2.max(), W3.max()], dtype=np.float64)
 
 
 
-
 print("Grid dimension: [{}, {}, {}]\n".format(nW1, nW2, nW3))
 print("Grid step: [{}, {}, {}]\n".format(hW1, hW2, hW3))
 
@@ -109,6 +122,8 @@ V0 = W1_mat +5
 d_star = 0.025*np.ones(W1_mat.shape)
 h1_star = -0.025*np.zeros(W1_mat.shape)
 hz_star = -0.025*np.zeros(W1_mat.shape)
+
+
 
 dVec = np.array([hW1, hW2, hW3])
 increVec = np.array([1, nW1, nW1*nW2], dtype=np.int32)
@@ -130,14 +145,20 @@ FC_Err = 1
 epoch = 0
 max_iter = args.maxiter
 tol = 1e-6
+# fraction = 0.1
+# epsilon = 0.01
 fraction = args.fraction
 epsilon = args.epsilon
 
 while FC_Err > tol and epoch < max_iter:
     start_eps = time.time()
 
-    dVdW1= finiteDiff_3D(V0, 0, 1, hW1)
-    ddVddW1= finiteDiff_3D(V0, 0, 2, hW1)
+
+
+    # dVdW1= finiteDiff_3D(V0, 0, 1, hW1)
+    # ddVddW1= finiteDiff_3D(V0, 0, 2, hW1)
+    dVdW1= finiteDiff_3D2(V0, 0, 1, hW1)
+    ddVddW1= finiteDiff_3D2(V0, 0, 2, hW1)
     # dZ = dW1
     dVdW2 = finiteDiff_3D(V0, 1, 1, hW2)
     ddVddW2 = finiteDiff_3D(V0, 1, 2, hW2)
@@ -160,9 +181,35 @@ while FC_Err > tol and epoch < max_iter:
     
     d_new = mc - 1
     d_new = d_new/theta2
+
+    # d_new[d_new>=A_cap] = A_cap-0.001
+
+    #######new scheme for d#############
+    # V0[V0<=1e-16] = 1e-16 
+    # RHS = delta*V0**(rho-1)/(A_cap-d_star)**(rho)
     
-    h1_new = -(.01*sigma_c[0]+dVdW1*sigma_z[0])/ell
-    hz_new = -(.01*sigma_c[1]+dVdW1*sigma_z[1])/ell
+    # if RHS.all()>0:
+    #     RHS_inv = 1/RHS
+        
+    #     d_new = RHS_inv-1
+    #     d_new = d_new/theta2
+        
+    #     d_new[d_new>=A_cap] = A_cap-0.001
+
+
+    # else:
+    #     d_new[RHS<=0]=A_cap-0.001
+        
+    #     d_new[RHS>0] = (1/RHS-1)/theta2
+        
+    #     d_new[d_new>=A_cap] = A_cap-0.001
+
+        
+    
+    
+    h1_new = -(sigma_c[0]+dVdW1*sigma_z[0])/ell
+    hz_new = -(sigma_c[1]+dVdW1*sigma_z[1])/ell
+    # c_new[c_new<=1e-16] = 1e-16
 
     d = d_new * fraction + d_star*(1-fraction)
     h1 = h1_new * fraction + h1_star*(1-fraction)
@@ -178,6 +225,9 @@ while FC_Err > tol and epoch < max_iter:
     C_1 = (sigma_z[0]**2+sigma_z[1]**2)/2*np.ones(W1_mat.shape)
     C_2 = np.zeros(W1_mat.shape)
     C_3 = np.zeros(W1_mat.shape)
+    C_12 = np.zeros(W1_mat.shape)
+    C_23 = np.zeros(W1_mat.shape)
+    C_31 = np.zeros(W1_mat.shape)
     temp = (1-rho)* ( np.log(A_cap - d)-V0 )
     D = delta/(1-rho) * ( np.exp(temp) - 1) 
     D += theta1*np.log(1+theta2*d) + (alpha_k_hat + beta_hat *W1_mat - 1/2*(sigma_c[0]**2+sigma_c[1]**2) ) + (sigma_c[0]*h1 + sigma_c[1]*hz)
@@ -186,17 +236,24 @@ while FC_Err > tol and epoch < max_iter:
     start_ksp = time.time()
 
     A_1d = A.ravel(order='F')
-    C_1_1d = C_1.ravel(order='F')
-    C_2_1d = C_2.ravel(order='F')
-    C_3_1d = C_3.ravel(order='F')
     B_1_1d = B_1.ravel(order='F')
     B_2_1d = B_2.ravel(order='F')
     B_3_1d = B_3.ravel(order='F')
+    C_1_1d = C_1.ravel(order='F')
+    C_2_1d = C_2.ravel(order='F')
+    C_3_1d = C_3.ravel(order='F')
+    C_12_1d = C_12.ravel(order='F')
+    C_23_1d = C_23.ravel(order='F')
+    C_31_1d = C_31.ravel(order='F')
     D_1d = D.ravel(order='F')
-    petsclinearsystem.formLinearSystem(W1_mat_1d, W2_mat_1d, W3_mat_1d, A_1d, B_1_1d, B_2_1d,
+    # petsclinearsystemXDiff.formLinearSystem_DirectCrossDiff(W1_mat_1d, W2_mat_1d, W3_mat_1d, A_1d, B_1_1d, B_2_1d,
+    #                                    B_3_1d, C_1_1d, C_2_1d, C_3_1d, C_12_1d, C_23_1d, C_31_1d, epsilon, lowerLims, upperLims, dVec, increVec, petsc_mat)
+    # V0_1d = V0.ravel(order='F')
+    # b = V0_1d / epsilon + D_1d 
+    petsclinearsystemXDiff.formLinearSystem(W1_mat_1d, W2_mat_1d, W3_mat_1d, A_1d, B_1_1d, B_2_1d,
                                        B_3_1d, C_1_1d, C_2_1d, C_3_1d, epsilon, lowerLims, upperLims, dVec, increVec, petsc_mat)
     V0_1d = V0.ravel(order='F')
-    b = V0_1d + D_1d * epsilon
+    b = V0_1d  + D_1d *epsilon
     petsc_rhs = PETSc.Vec().createWithArray(b)
     x = petsc_mat.createVecRight()
 
@@ -268,7 +325,7 @@ res = {
 Data_Dir = "./data/"+args.dataname+"/"
 os.makedirs(Data_Dir, exist_ok=True)
 
-with open(Data_Dir + "result_ell_{}_rho_{}_eps_{}_frac_{}".format(ell, rho,epsilon,fraction), "wb") as f:
+with open(Data_Dir + "result_rho_{}_eps_{}_frac_{}".format(rho,epsilon,fraction), "wb") as f:
     pickle.dump(res, f)
 
 # Data_Dir = "./continuous2/"

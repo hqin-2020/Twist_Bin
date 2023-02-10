@@ -15,7 +15,7 @@ actiontime=1
 
 # python_name="singlecap_ex.py"
 # python_name="singlecap_ex_newcab.py"
-python_name="singlecap_ex_newcab_newsigmaz.py"
+python_name="singlecap_ex_newcab_newsigmaz_XDiff.py"
 # python_name="singlecap_ex_newcab_newsigmaz2.py"
 
 maxiter=200000
