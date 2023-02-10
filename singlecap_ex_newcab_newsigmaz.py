@@ -66,7 +66,7 @@ zmin = -zmax
 
 W1_min = zmin
 W1_max = zmax
-hW1 = 0.0005
+hW1 = 0.001
 W1 = np.arange(W1_min, W1_max+hW1, hW1)
 nW1 = len(W1)
 
@@ -95,6 +95,7 @@ W3_mat_1d = W3_mat.ravel(order='F')
 
 lowerLims = np.array([W1.min(), W2.min(), W3.min()], dtype=np.float64)
 upperLims = np.array([W1.max(), W2.max(), W3.max()], dtype=np.float64)
+
 
 
 
@@ -135,8 +136,8 @@ epsilon = args.epsilon
 while FC_Err > tol and epoch < max_iter:
     start_eps = time.time()
 
-    dVdW1= finiteDiff_3D(V0, 0, 1, hW1)
-    ddVddW1= finiteDiff_3D(V0, 0, 2, hW1)
+    dVdW1= finiteDiff_3D2(V0, 0, 1, hW1)
+    ddVddW1= finiteDiff_3D2(V0, 0, 2, hW1)
     # dZ = dW1
     dVdW2 = finiteDiff_3D(V0, 1, 1, hW2)
     ddVddW2 = finiteDiff_3D(V0, 1, 2, hW2)
