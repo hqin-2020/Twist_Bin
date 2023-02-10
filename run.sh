@@ -18,7 +18,7 @@ actiontime=1
 python_name="singlecap_ex_newcab_newsigmaz.py"
 # python_name="singlecap_ex_newcab_newsigmaz2.py"
 
-maxiter=20000
+maxiter=200000
 
 # rhoarray=(0.667 0.750 1.00001 1.333 1.500)
 # rhoarray=(0.800 0.850 0.900 0.950 1.00001 1.050 1.100 1.150 1.200 1.250 1.300)
