@@ -2,7 +2,7 @@
 
 # epsilonarray=(0.1 0.05 0.01 0.005) #Computation of coarse grid and psi10.5
 # fractionarray=(0.1 0.05 0.01 0.005)
-epsilonarray=(0.1 0.01 0.001) #Computation of coarse grid and psi10.5
+epsilonarray=(0.1) #Computation of coarse grid and psi10.5
 fractionarray=(0.1)
 
 # epsilonarray=(0.01) #Computation of coarse grid and psi10.5
@@ -36,7 +36,7 @@ for epsilon in ${epsilonarray[@]}; do
             for ell in "${ellarray[@]}"; do
                 count=0
 
-                action_name="OneCapital_newcab_newgrid_morepts_opt"
+                action_name="OneCapital_newcab_newgrid_morepts_opt2"
 
                 dataname="${action_name}_${epsilon}_frac_${fraction}"
 
