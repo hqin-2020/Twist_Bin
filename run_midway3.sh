@@ -64,17 +64,18 @@ for epsilon in ${epsilonarray[@]}; do
 #! /bin/bash
 
 ######## login
-#SBATCH --job-name=${rho}_${ell}
-#SBATCH --output=./job-outs/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.out
-#SBATCH --error=./job-outs/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.err
+#SBATCH --job-name=${rho}
+#SBATCH --output=./job-outs/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}.out
+#SBATCH --error=./job-outs/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}.err
 
 #SBATCH --account=pi-lhansen
-#SBATCH --partition=caslake
-#SBATCH --cpus-per-task=1
+#SBATCH --partition=standard
+#SBATCH --cpus-per-task=5
 #SBATCH --mem=1G
-#SBATCH --time=12:00:00
+#SBATCH --time=7-00:00:00
 
 ####### load modules
+# module load python/booth/3.8/3.8.5  gcc/9.2.0
 module load python  gcc
 
 echo "\$SLURM_JOB_NAME"
