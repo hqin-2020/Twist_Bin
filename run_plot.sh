@@ -32,11 +32,11 @@ for epsilon in ${epsilonarray[@]}; do
             for ell in "${ellarray[@]}"; do
                 count=0
 
-                action_name="OneCapital_newcab_newgrid_morepts_opt"
+                action_name="OneCapital_newcab_newgrid_morepts_opt2_plot"
 
                 dataname="${action_name}_${epsilon}_frac_${fraction}"
                 
-                mkdir -p ./job-outs/${action_name}/p_eps_${epsilon}_frac_${fraction}/
+                mkdir -p ./job-outs/${action_name}/eps_${epsilon}_frac_${fraction}/
 
                 if [ -f ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh ]; then
                     rm ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh
