@@ -69,10 +69,10 @@ for epsilon in ${epsilonarray[@]}; do
 #SBATCH --error=./job-outs/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}.err
 
 #SBATCH --account=pi-lhansen
-#SBATCH --partition=standard
-#SBATCH --cpus-per-task=5
+#SBATCH --partition=caslake
+#SBATCH --cpus-per-task=1
 #SBATCH --mem=1G
-#SBATCH --time=7-00:00:00
+#SBATCH --time=12:00:00
 
 ####### load modules
 # module load python/booth/3.8/3.8.5  gcc/9.2.0
