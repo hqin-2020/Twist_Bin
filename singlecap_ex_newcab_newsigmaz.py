@@ -54,7 +54,7 @@ theta1 = 1/88
 theta2 = 88
 
 # ell=0.05
-ell = args.ell
+ell = 1/9
 
 JJ=201
 # rmax =  18.0
