@@ -32,27 +32,27 @@ for epsilon in ${epsilonarray[@]}; do
             for ell in "${ellarray[@]}"; do
                 count=0
 
-                action_name="OneCapital_newcab_newgrid_morepts_opt2_plot"
+                action_name="OneCapital_newcab_newgrid_morepts_opt2"
 
                 dataname="${action_name}_${epsilon}_frac_${fraction}"
                 
-                mkdir -p ./job-outs/${action_name}/eps_${epsilon}_frac_${fraction}/
+                mkdir -p ./job-outs/${action_name}/p_eps_${epsilon}_frac_${fraction}/
 
-                if [ -f ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh ]; then
-                    rm ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh
+                if [ -f ./bash/${action_name}/p_eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh ]; then
+                    rm ./bash/${action_name}/p_eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh
                 fi
 
-                mkdir -p ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/
+                mkdir -p ./bash/${action_name}/p_eps_${epsilon}_frac_${fraction}/
 
-                touch ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh
+                touch ./bash/${action_name}/p_eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh
 
-                tee -a ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh <<EOF
+                tee -a ./bash/${action_name}/p_eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh <<EOF
 #! /bin/bash
 
 ######## login
 #SBATCH --job-name=${rho}_${ell}
-#SBATCH --output=./job-outs/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.out
-#SBATCH --error=./job-outs/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.err
+#SBATCH --output=./job-outs/${action_name}/p_eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.out
+#SBATCH --error=./job-outs/${action_name}/p_eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.err
 
 #SBATCH --account=pi-lhansen
 #SBATCH --partition=caslake
@@ -81,7 +81,7 @@ eval "echo Elapsed time: \$(date -ud "@\$elapsed" +'\$((%s/3600/24)) days %H hr 
 
 EOF
                 count=$(($count + 1))
-                sbatch ./bash/${action_name}/eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh
+                sbatch ./bash/${action_name}/p_eps_${epsilon}_frac_${fraction}/rho_${rho}_ell_${ell}.sh
             #                 done
             done
         done
